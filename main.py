@@ -10,6 +10,7 @@ import json
 import csv
 import os
 import traceback
+from urllib.parse import urlparse
 
 # Replace 'http://username:password@your_proxy_url' with the actual proxy URL, username, and password
 #proxy_url = 'http://zrscbilj-US-rotate:2u71nkuyuo29@p.webshare.io:80'
@@ -19,6 +20,13 @@ input_file = "keywords.csv"
 
 # Define the static variable for the number of URLs to download
 URL_count = 30
+
+def is_valid_url(url):
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
 
 def downloadVideo(link, id, keyword):
     #global proxy
@@ -94,16 +102,17 @@ def downloadVideo(link, id, keyword):
 
         video_path = os.path.join(keyword_folder, f"{id}-{keyword}.mp4")
 
-        # Send a HEAD request to check if the URL is accessible
-        response = requests.head(downloadLink)
+        if is_valid_url(downloadLink):
+            # Send a HEAD request to check if the URL is accessible
+            response = requests.head(downloadLink)
 
-        # Check the HTTP status code to verify the link's integrity
-        if response.status_code == 200:
-            print("The download link is valid.")
-            # You can proceed with urlopen or any other actions you need to perform.
-            mp4File = urlopen(downloadLink)
-        else:
-            print(f"The download link returned an HTTP status code: {response.status_code}. It may be invalid.")
+            # Check the HTTP status code to verify the link's integrity
+            if response.status_code == 200:
+                print("The download link is valid.")
+                # You can proceed with urlopen or any other actions you need to perform.
+                mp4File = urlopen(downloadLink)
+            else:
+                print(f"The download link returned an HTTP status code: {response.status_code}. It may be invalid.")
         
         # Download and save the video
         with open(video_path, "wb") as output:
