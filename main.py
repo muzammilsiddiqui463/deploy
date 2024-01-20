@@ -10,9 +10,10 @@ import json
 import csv
 import os
 import traceback
+import random
 
 # Replace 'http://username:password@your_proxy_url' with the actual proxy URL, username, and password
-proxy_url = 'http://zrscbilj-US-rotate:2u71nkuyuo29@p.webshare.io:80'
+proxy_url = 'http://avzxawjz-rotate:43eiaf24ra8o@p.webshare.io:80'
 proxy = {'http': proxy_url, 'https': proxy_url}
 input_file = "keywords.csv"
 
@@ -24,58 +25,119 @@ def downloadVideo(link, id, keyword):
     print(f"Downloading video {id} from: {link} for {keyword}")
     
     # Cookies and headers for the HTTP request
-    cookies = {
-        '_ga': 'GA1.1.940644881.1705262011',
-        '__gads': 'ID=c85399c900c8de1c:T=1705262013:RT=1705262013:S=ALNI_MYH4G1QH6PiS4HkAiki0QquZsipug',
-        '__gpi': 'UID=00000cf63f2d1c78:T=1705262013:RT=1705262013:S=ALNI_MaYVX4M8txn-I3ziFNO6H75L6vJgA',
-        'FCNEC': '%5B%5B%22AKsRol8wsgl7CfwuQpeKukzdl1H26JqjK2kERg-f6ZfzJ2MNGj59In4SmPd6jGy_4hD-hxFhm__EN2t3H7vF1ihVtKgWHVagUwasxas7HSHbAKif2VIVEFejXGB9Wvs49lACCOrvtTRq9oBACKcaXJt7lTKWtDg2aA%3D%3D%22%5D%5D',
-        '_ga_ZSF3D6YSLC': 'GS1.1.1705262011.1.0.1705262059.0.0.0',
-    }
+    cookies = [{
+        '_ga': 'GA1.1.549270780.1705679996',
+        '__gads': 'ID=7d03875a6c226889:T=1705679998:RT=1705679998:S=ALNI_MZUj747_RPWHjsIS31bp53DVJTuPA',
+        '__gpi': 'UID=00000cfb661fc03d:T=1705679998:RT=1705679998:S=ALNI_MZw5PXr24ZQmMzpdEJJImSXFfK05Q',
+        'FCNEC': '%5B%5B%22AKsRol__ju4wfJ4QUcQuTKMa1NZ7DIpROf6OEhZ62gQbm59rpvYLE-AULmFAML8v3JFtR5Zm148o88hc3HgrJammf3lBzXKZfZsdLz14aCJ9iMPXLP7OHDFlBTTe_k6N2pChVgHupq3xntVfL-KZPd7wfgiRbk52Hg%3D%3D%22%5D%5D',
+        '_ga_0E6L67P48P': 'GS1.1.1705679996.1.0.1705680005.0.0.0',
+    },
+        {
+            '_ga': 'GA1.1.1368246834.1705679183',
+            '__gads': 'ID=6ace672e87a29587:T=1705679184:RT=1705679184:S=ALNI_MZCFx8Sd6tfmVIuCZodCd0YR7ZJrQ',
+            '__gpi': 'UID=00000cfb642de669:T=1705679184:RT=1705679184:S=ALNI_Ma_DjQn4Zg2pA0MuA0LgVao2UU7QQ',
+            'FCNEC': '%5B%5B%22AKsRol9MIRnjpAqWOn6XORyyCSPo5BzlOfWrtWliuHbh-_VOHtI8QDWZRTgZgBHZpZyaGP624iVNINoMA_jD2QLf34XD5q1Fplc8WF7qLl5ZYe2qZ0Aacwb0GLyXkPJjJdSBRQ-I4q0_RaOBLdiuGkKafwwyvuYPVQ%3D%3D%22%5D%5D',
+            '_ga_0E6L67P48P': 'GS1.1.1705679182.1.0.1705679219.0.0.0',
+        },
+        {
+            '_ga': 'GA1.1.1827974823.1705680537',
+            '__gads': 'ID=2c23abaec0d8b1a7:T=1705680536:RT=1705680536:S=ALNI_MYeGxmOayQYHodj1WPvVRAHq9-rLA',
+            '__gpi': 'UID=00000db878254fac:T=1705680536:RT=1705680536:S=ALNI_MbUzb5aMUy86DhELsWemfmhNFi-jQ',
+            'FCNEC': '%5B%5B%22AKsRol_tKV79J7BPHljCMIygpyV6k0s_rkJyyVglzYNVpkKjcrF1qV3JL_nkAylnXsozL3HkCJJqx37unV2w1MRepYQ1uX2hq3JW2otXqB1bcHPTksAqAT7XZq9qldXYeJ2G5uaVDdp_x0no_Q-wZChAGY8YNxFENw%3D%3D%22%5D%5D',
+            '_ga_0E6L67P48P': 'GS1.1.1705680536.1.0.1705680569.0.0.0',
+        }
+    ]
 
-    headers = {
-        'authority': 'ssstik.io',
-        'accept': '*/*',
-        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'hx-current-url': 'https://ssstik.io/en',
-        'hx-request': 'true',
-        'hx-target': 'target',
-        'hx-trigger': '_gcaptcha_pt',
-        'origin': 'https://ssstik.io',
-        'referer': 'https://ssstik.io/en',
-        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    }
+    headers = [
+        {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+         'Accept': '*/*',
+         'Accept-Language': 'en-US,en;q=0.5',
+         # 'Accept-Encoding': 'gzip, deflate, br',
+         'HX-Request': 'true',
+         'HX-Trigger': '_gcaptcha_pt',
+         'HX-Target': 'target',
+         'HX-Current-URL': 'https://tiktokdownload.online/',
+         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+         'Origin': 'https://tiktokdownload.online',
+         'DNT': '1',
+         'Alt-Used': 'tiktokdownload.online',
+         'Connection': 'keep-alive',
+         'Referer': 'https://tiktokdownload.online/',
+         # 'Cookie': '_ga_0E6L67P48P=GS1.1.1705679158.1.1.1705680241.0.0.0; _ga=GA1.1.1577407249.1705679159; __gads=ID=d66d29c1bdd24aea:T=1705679161:RT=1705679161:S=ALNI_MalLdqkP35udomzEn5HHHIu2bcW1Q; __gpi=UID=00000cfb654ef41c:T=1705679161:RT=1705679161:S=ALNI_MbWM0h6m2f4TLO0l7z4DWOYa2GGyQ; FCNEC=%5B%5B%22AKsRol_hHyf4p2hsj2hGcfMX6buQx_VKK3yymLtjWokB2eIQccBeXGaJUTHEfE8HB2iTNT_oFKZxG_OMAndnCJHGn4GVgV1T8o3w7tJylMDXUiTCfBxeVH24XzEK32PtMstwBgrW_N1LYPwH2lGTod67_946RKvjuQ%3D%3D%22%5D%5D',
+         'Sec-Fetch-Dest': 'empty',
+         'Sec-Fetch-Mode': 'cors',
+         'Sec-Fetch-Site': 'same-origin', },
+        {'authority': 'tiktokdownload.online',
+         'accept': '*/*',
+         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+         # 'cookie': '_ga=GA1.1.1368246834.1705679183; __gads=ID=6ace672e87a29587:T=1705679184:RT=1705679184:S=ALNI_MZCFx8Sd6tfmVIuCZodCd0YR7ZJrQ; __gpi=UID=00000cfb642de669:T=1705679184:RT=1705679184:S=ALNI_Ma_DjQn4Zg2pA0MuA0LgVao2UU7QQ; FCNEC=%5B%5B%22AKsRol9MIRnjpAqWOn6XORyyCSPo5BzlOfWrtWliuHbh-_VOHtI8QDWZRTgZgBHZpZyaGP624iVNINoMA_jD2QLf34XD5q1Fplc8WF7qLl5ZYe2qZ0Aacwb0GLyXkPJjJdSBRQ-I4q0_RaOBLdiuGkKafwwyvuYPVQ%3D%3D%22%5D%5D; _ga_0E6L67P48P=GS1.1.1705679182.1.0.1705679219.0.0.0',
+         'hx-current-url': 'https://tiktokdownload.online/',
+         'hx-request': 'true',
+         'hx-target': 'target',
+         'hx-trigger': '_gcaptcha_pt',
+         'origin': 'https://tiktokdownload.online',
+         'referer': 'https://tiktokdownload.online/',
+         'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+         'sec-ch-ua-mobile': '?0',
+         'sec-ch-ua-platform': '"Windows"',
+         'sec-fetch-dest': 'empty',
+         'sec-fetch-mode': 'cors',
+         'sec-fetch-site': 'same-origin',
+         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+         },
+        {
+            'authority': 'tiktokdownload.online',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            # 'cookie': '_ga=GA1.1.1827974823.1705680537; __gads=ID=2c23abaec0d8b1a7:T=1705680536:RT=1705680536:S=ALNI_MYeGxmOayQYHodj1WPvVRAHq9-rLA; __gpi=UID=00000db878254fac:T=1705680536:RT=1705680536:S=ALNI_MbUzb5aMUy86DhELsWemfmhNFi-jQ; FCNEC=%5B%5B%22AKsRol_tKV79J7BPHljCMIygpyV6k0s_rkJyyVglzYNVpkKjcrF1qV3JL_nkAylnXsozL3HkCJJqx37unV2w1MRepYQ1uX2hq3JW2otXqB1bcHPTksAqAT7XZq9qldXYeJ2G5uaVDdp_x0no_Q-wZChAGY8YNxFENw%3D%3D%22%5D%5D; _ga_0E6L67P48P=GS1.1.1705680536.1.0.1705680569.0.0.0',
+            'hx-current-url': 'https://tiktokdownload.online/',
+            'hx-request': 'true',
+            'hx-target': 'target',
+            'hx-trigger': '_gcaptcha_pt',
+            'origin': 'https://tiktokdownload.online',
+            'referer': 'https://tiktokdownload.online/',
+            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        }
+    ]
 
     params = {
         'url': 'dl',
     }
-
-    data = {
-        'id': link,
-        'locale': 'en',
-        'tt': 'ZUJCUlM_',
-        # NOTE: This value gets changed, please use the value that you get when you copy the curl command from the network console
-    }
-
-    downloadLink = None  # Initialize downloadLink as None
-
-    # Attempt to get the download link for the video
+    codes = ['eHc4a3lm', 'aVZQQTM1']
+    code_i = 0
     for i in range(200):
         try:
-            response = requests.post('https://ssstik.io/abc', params=params,
-                                     headers=headers,
+            try:
+                data = {
+                    'id': link,
+                    'locale': 'en',
+                    'tt': codes[code_i],
+                }
+                code_i += 1
+            except:
+                code_i = 0
+                data = {
+                    'id': link,
+                    'locale': 'en',
+                    'tt': codes[code_i],
+                }
+            response = requests.post('https://tiktokdownload.online/abc',
+                                     params=params,
+                                     cookies=cookies[random.randrange(0, len(cookies))],
+                                     headers=headers[random.randrange(0, len(headers))],
                                      data=data,
-                                     proxies=proxy)
+                                     )
             downloadSoup = BeautifulSoup(response.text, "html.parser")
 
             downloadLink = downloadSoup.a["href"]
-            videoTitle = downloadSoup.p.getText().strip()
             break
         except:
             time.sleep(0.5)
@@ -106,9 +168,9 @@ def downloadVideo(link, id, keyword):
         # Get video data from TikTok (likes, comments, shares, views)
         data = get_data(link)
         if data != None:
-            like, comment, share, view = data
+            like, comment, share, view, videoTitle = data
         else:
-            like, comment, share, view = ["", "", "", ""]
+            like, comment, share, view, videoTitle = ["", "", "", "", ""]
         
         # Save video path and details to CSV
         with open('output.csv', mode='a', newline='', encoding='utf-8') as csvfile:
@@ -135,7 +197,20 @@ def downloadVideo(link, id, keyword):
         # Only start the thread if downloadLink is not None
         s = threading.Thread(target=sub_thread, args=(downloadLink, id, keyword, link,))
         s.start()
-
+def find_des(data):
+    #shareMeta
+    if isinstance(data, dict):
+        if 'shareMeta' in data:
+            return data['shareMeta']
+        for key, value in data.items():
+            result = find_des(value)
+            if result:
+                return result
+    elif isinstance(data, list):
+        for item in data:
+            result = find_des(item)
+            if result:
+                return result
 def find_stats(data):
     # Function to find video statistics in the JSON-like data
     if isinstance(data, dict):
@@ -191,20 +266,26 @@ def get_data(link):
             # Find the stats information using the recursive function
             stats_info = find_stats(json_data)
             if stats_info:
+                des = find_des(json_data)
+                if des != None:
+
+                    des = des['desc']
+                else:
+                    des = ""
                 return (stats_info['diggCount'], stats_info['commentCount'], stats_info['shareCount'],
-                        stats_info['playCount'])
+                        stats_info['playCount'], des)
 
-def start_process(keyword, driver):
-    # Function to start the video downloading process
+def start_process(keyword,driver):
 
-    # Change the TikTok link
+
+    # Change the tiktok link
     driver.get(f"https://www.tiktok.com/search/video?q={keyword}")
 
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
-    time.sleep(5)
+    time.sleep(15)
 
-    scroll_pause_time = 4
+    scroll_pause_time = 3
     screen_height = driver.execute_script("return window.screen.height;")
     i = 1
 
@@ -222,44 +303,48 @@ def start_process(keyword, driver):
         script += className
         script += "\").forEach(item => { l.push(item.querySelector('a').href)});"
         script += "return l;"
-        time.sleep(2)
+        time.sleep(0.8)
 
         urlsToDownload.extend(driver.execute_script(script))
 
-        if len(urlsToDownload) >= URL_count:
+        if len(urlsToDownload)>=100:
             break
 
-        elif (screen_height) * i > scroll_height:
-            break
-
-    urlsToDownload = urlsToDownload[:URL_count]
-    count = 0
+    urlsToDownload=urlsToDownload[:100]
+    count=0
     print(urlsToDownload)
     print(f"Scraped {len(urlsToDownload)} video Links")
     threads = []
     for index, url in enumerate(urlsToDownload):
+
+
         try:
-            s = threading.Thread(target=downloadVideo, args=(url, index, keyword,))
+            # downloadVideo(url, index,keyword)
+            s=threading.Thread(target=downloadVideo,args=(url, index,keyword,))
             threads.append(s)
+
         except Exception as e:
+
             continue
-        if count >= URL_count:
+        # time.sleep(2)
+        if count>=100:
             count = 0
             break
         else:
-            count += 1
+            count+=1
     join_list = []
     count = 0
     for t in threads:
         t.start()
         join_list.append(t)
-        if count > 5:
+        if count>20:
             count = 0
+            print("Now waiting for current threads to finish.....")
             for j in join_list:
                 j.join()
             join_list = []
         else:
-            count += 1
+            count+=1
         time.sleep(1.6)
 
 def main(csv_file_path):
