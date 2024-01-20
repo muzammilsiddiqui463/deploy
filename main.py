@@ -12,15 +12,16 @@ import os
 import traceback
 
 # Replace 'http://username:password@your_proxy_url' with the actual proxy URL, username, and password
-proxy_url = 'http://zrscbilj-US-rotate:2u71nkuyuo29@p.webshare.io:80'
-proxy = {'http': proxy_url, 'https': proxy_url}
+#proxy_url = 'http://zrscbilj-US-rotate:2u71nkuyuo29@p.webshare.io:80'
+#proxy_url = '149.20.253.41:12551'
+#proxy = {'http': proxy_url, 'https': proxy_url}
 input_file = "keywords.csv"
 
 # Define the static variable for the number of URLs to download
 URL_count = 30
 
 def downloadVideo(link, id, keyword):
-    global proxy
+    #global proxy
     print(f"Downloading video {id} from: {link} for {keyword}")
     
     # Cookies and headers for the HTTP request
@@ -70,8 +71,8 @@ def downloadVideo(link, id, keyword):
         try:
             response = requests.post('https://ssstik.io/abc', params=params,
                                      headers=headers,
-                                     data=data,
-                                     proxies=proxy)
+                                     data=data)
+                                     #proxies=proxy)
             downloadSoup = BeautifulSoup(response.text, "html.parser")
 
             downloadLink = downloadSoup.a["href"]
@@ -93,7 +94,16 @@ def downloadVideo(link, id, keyword):
 
         video_path = os.path.join(keyword_folder, f"{id}-{keyword}.mp4")
 
-        mp4File = urlopen(downloadLink)
+        # Send a HEAD request to check if the URL is accessible
+        response = requests.head(downloadLink)
+
+        # Check the HTTP status code to verify the link's integrity
+        if response.status_code == 200:
+            print("The download link is valid.")
+            # You can proceed with urlopen or any other actions you need to perform.
+            mp4File = urlopen(downloadLink)
+        else:
+            print(f"The download link returned an HTTP status code: {response.status_code}. It may be invalid.")
         
         # Download and save the video
         with open(video_path, "wb") as output:
@@ -153,7 +163,7 @@ def find_stats(data):
 
 def get_data(link):
     # Function to get video data (likes, comments, shares, views) from TikTok
-    global proxy
+    #global proxy
     headers = {
     'authority': 'mcs-va.tiktokv.com',
     'accept': '*/*',
@@ -170,7 +180,8 @@ def get_data(link):
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     }
     try:
-        r = requests.get(link, headers=headers, proxies=proxy)
+        #r = requests.get(link, headers=headers, proxies=proxy)
+        r = requests.get(link, headers=headers)
     except:
         return None
     videoSoup = BeautifulSoup(r.content, "html.parser")
@@ -253,14 +264,14 @@ def start_process(keyword, driver):
     for t in threads:
         t.start()
         join_list.append(t)
-        if count > 5:
+        if count > 15:
             count = 0
             for j in join_list:
                 j.join()
             join_list = []
         else:
             count += 1
-        time.sleep(1.6)
+        time.sleep(.5)
 
 def main(csv_file_path):
     # Main function to read keywords from a CSV file and initiate the downloading process
