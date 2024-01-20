@@ -1,14 +1,19 @@
 from selenium.webdriver.chrome.options import Options
 import undetected_chromedriver as uc
+
 import os
 
 # Define Chrome options
 chrome_options = Options()
 # chrome_options.add_argument('--headless')  # Run Chrome in headless mode
 # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument('--disable-gpu') # Disable GPU acceleration
+
+# Set the display environment variable
+os.environ['DISPLAY'] = ':99'
 # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH")
 
 # Initialize the WebDriver with Chrome options
