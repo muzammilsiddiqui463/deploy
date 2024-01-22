@@ -341,10 +341,24 @@ def start_process(keyword,driver):
     # Change the tiktok link
     driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
     # Load cookies from the saved file
-    with open('cookies.pkl', 'rb') as cookies_file:
+    with open(os.getcwd()+'/cookies.pkl', 'rb') as cookies_file:
         cookies = pickle.load(cookies_file)
         for cookie in cookies:
             driver.add_cookie(cookie)
+    driver.save_screenshot("page.png")
+    bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/Tst_screenshots/page.png'
+    headers = {
+        'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
+        'Content-Type': 'application/octet-stream'
+    }
+    with open("page.png", 'rb') as file:
+        response = requests.put(bunny_url, headers=headers, data=file)
+
+    # Check the response
+    if response.ok:
+        print("Screenshot uploaded successfully.")
+    else:
+        print(f"Error uploading screenshot: {response.status_code}")
     driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
@@ -361,20 +375,7 @@ def start_process(keyword,driver):
 
     print("STEP 2: Scrolling page")
     urlsToDownload = []
-    driver.save_screenshot("page.png")
-    bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/Tst_screenshots/page.png'
-    headers = {
-        'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
-        'Content-Type': 'application/octet-stream'
-    }
-    with open("page.png", 'rb') as file:
-        response = requests.put(bunny_url, headers=headers, data=file)
 
-    # Check the response
-    if response.ok:
-        print("Screenshot uploaded successfully.")
-    else:
-        print(f"Error uploading screenshot: {response.status_code}")
 
     while True:
         driver.execute_script("window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
