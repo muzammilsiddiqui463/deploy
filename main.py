@@ -339,6 +339,8 @@ def get_data(link):
 def start_process(keyword,driver):
     global csv_content,csv_data,csv_fieldnames,sub_threads
 
+    print("Scraping Started")
+
     # Change the tiktok link
 
 
@@ -451,10 +453,14 @@ def main(csv_file_path):
 
         options = uc.ChromeOptions()
         options.user_data_dir = os.getcwd() + "/profile"
-        options.add_argument('--headless')  # Run Chrome in headless mode
-        options.add_argument('--disable-gpu')  # Disable GPU acceleration (useful in headless mode)
-        options.add_argument('--no-sandbox')  # Disable sandboxing for headless mode in Linux
-        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("enable-automation")
+        options.add_argument("--headless")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--dns-prefetch-disable")
+        options.add_argument("--disable-gpu")
+        options.page_load_strategy = 'normal'
         driver = uc.Chrome(options=options)
 
         driver.get(f"https://www.tiktok.com/search/video?lang=en&t=1705902142362")
