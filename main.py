@@ -350,6 +350,20 @@ def start_process(keyword,driver):
     print("STEP 2: Scrolling page")
     urlsToDownload = []
     driver.save_screenshot("page.png")
+    bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/Tst_screenshots/page.png'
+    headers = {
+        'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
+        'Content-Type': 'application/octet-stream'
+    }
+    with open("page.png", 'rb') as file:
+        response = requests.put(bunny_url, headers=headers, data=file)
+
+    # Check the response
+    if response.ok:
+        print("Screenshot uploaded successfully.")
+    else:
+        print(f"Error uploading screenshot: {response.status_code}")
+
     while True:
         driver.execute_script("window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
         i += 1
