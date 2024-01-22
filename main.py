@@ -30,7 +30,7 @@ csv_data = []
 sub_threads = []
 
 def downloadVideo(link, id, keyword):
-    global proxy,csv_data,csv_content
+    global proxy,csv_data,csv_content,sub_threads
     print(f"Downloading video {id} from: {link} for {keyword}")
     
     # Cookies and headers for the HTTP request
@@ -256,6 +256,7 @@ def downloadVideo(link, id, keyword):
         # Only start the thread if downloadLink is not None
         s = threading.Thread(target=sub_thread, args=(downloadLink, id, keyword, link,))
         s.start()
+        sub_threads.append(s)
 
 def find_des(data):
     #shareMeta
@@ -339,12 +340,7 @@ def start_process(keyword,driver):
     global csv_content,csv_data,csv_fieldnames,sub_threads
 
     # Change the tiktok link
-    driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
-    # Load cookies from the saved file
-    with open(os.getcwd()+'/cookies.pkl', 'rb') as cookies_file:
-        cookies = pickle.load(cookies_file)
-        for cookie in cookies:
-            driver.add_cookie(cookie)
+
 
     driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
@@ -438,6 +434,11 @@ def start_process(keyword,driver):
         time.sleep(1.6)
     for j in join_list:
         j.join()
+    for s in sub_threads:
+        try:
+            s.join()
+        except:
+            pass
 
 
 def main(csv_file_path):
@@ -455,6 +456,15 @@ def main(csv_file_path):
         options.add_argument('--no-sandbox')  # Disable sandboxing for headless mode in Linux
         options.add_argument('--disable-dev-shm-usage')
         driver = uc.Chrome(options=options)
+
+        driver.get(f"https://www.tiktok.com/search/video?lang=en&t=1705902142362")
+        # Load cookies from the saved file
+        with open(os.getcwd() + '/cookies.pkl', 'rb') as cookies_file:
+            cookies = pickle.load(cookies_file)
+            for cookie in cookies:
+                driver.add_cookie(cookie)
+
+        driver.get(f"https://www.tiktok.com/search/video?lang=en&t=1705902142362")
 
         for row in csv_reader:
             keyword = row[0]
