@@ -338,7 +338,7 @@ def start_process(keyword,driver):
     global csv_content,csv_data,csv_fieldnames,sub_threads
 
     # Change the tiktok link
-    driver.get(f"https://www.tiktok.com/search/video?q={keyword}")
+    driver.get(f"https://www.tiktok.com/search?lang=en&q={keyword}&t=1705902142362")
 
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
