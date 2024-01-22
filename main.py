@@ -345,6 +345,12 @@ def start_process(keyword,driver):
         cookies = pickle.load(cookies_file)
         for cookie in cookies:
             driver.add_cookie(cookie)
+
+    driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
+    # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
+    # to 60 seconds, just enough time for you to complete the captcha yourself.
+    time.sleep(15)
+
     driver.save_screenshot("page.png")
     bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/Tst_screenshots/page.png'
     headers = {
@@ -359,10 +365,6 @@ def start_process(keyword,driver):
         print("Screenshot uploaded successfully.")
     else:
         print(f"Error uploading screenshot: {response.status_code}")
-    driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
-    # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
-    # to 60 seconds, just enough time for you to complete the captcha yourself.
-    time.sleep(15)
     # webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
     # time.sleep(6)
 
@@ -392,7 +394,7 @@ def start_process(keyword,driver):
         time.sleep(0.8)
 
         urlsToDownload.extend(driver.execute_script(script))
-        print(len(urlsToDownload))
+
 
         if len(urlsToDownload)>=100:
             break
