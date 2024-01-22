@@ -345,6 +345,10 @@ def start_process(keyword,driver):
     time.sleep(15)
     webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
     time.sleep(6)
+
+    # Change the tiktok link
+    driver.get(f"https://www.tiktok.com/search/video?q={keyword}")
+    time.sleep(3)
     scroll_pause_time = 3
     screen_height = driver.execute_script("return window.screen.height;")
     i = 1
