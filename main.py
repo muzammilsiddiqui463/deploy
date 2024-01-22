@@ -460,8 +460,11 @@ def main(csv_file_path):
         options.add_argument("--disable-extensions")
         options.add_argument("--dns-prefetch-disable")
         options.add_argument("--disable-gpu")
-        options.page_load_strategy = 'normal'
-        driver = uc.Chrome(options=options,driver_executable_path=os.getcwd()+"/chromedriver-linux64/chromedriver")
+        options.page_load_strategy = 'eager'
+        service_ags = ['--verbose', f'--log-path={os.getcwd()}/chromedriver.log']
+        driver = uc.Chrome(options=options,
+                           driver_executable_path=os.getcwd()+"/chromedriver-linux64/chromedriver",
+                           service_args=service_ags)
 
         driver.get(f"https://www.tiktok.com/search/video?lang=en&t=1705902142362")
         # Load cookies from the saved file
