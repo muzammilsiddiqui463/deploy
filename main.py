@@ -227,13 +227,13 @@ def downloadVideo(link, id, keyword):
                 keyword,
             ]
 
-        temp = []
+
 
         data = ",".join(data)
         csv_content += '\n'+data
-        print(csv_content)
 
-        temp = []
+
+
         headers = {
             'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
             'Content-Type': 'text/csv'
@@ -370,7 +370,7 @@ def start_process(keyword,driver):
 
     urlsToDownload=urlsToDownload[:100]
     count=0
-    print(urlsToDownload)
+
     print(f"Scraped {len(urlsToDownload)} video Links")
     threads = []
     for index, url in enumerate(urlsToDownload):
