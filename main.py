@@ -345,7 +345,7 @@ def start_process(keyword,driver):
         cookies = pickle.load(cookies_file)
         for cookie in cookies:
             driver.add_cookie(cookie)
-    driver.refresh()
+    driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
     time.sleep(15)
