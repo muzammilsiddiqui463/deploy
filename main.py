@@ -20,8 +20,15 @@ input_file = "keywords.csv"
 # Define the static variable for the number of URLs to download
 URL_count = 30
 
+csv_fieldnames = ['Description and Tags', 'Video ID', 'Likes', 'Comments', 'Shares', 'Views',
+                  'Video Path', 'Keyword']
+# Create CSV content
+csv_content = '\n'.join(','.join(map(str, row_data)) for row_data in [csv_fieldnames])
+csv_data = []
+sub_threads = []
+
 def downloadVideo(link, id, keyword):
-    global proxy
+    global proxy,csv_data,csv_content
     print(f"Downloading video {id} from: {link} for {keyword}")
     
     # Cookies and headers for the HTTP request
@@ -143,6 +150,7 @@ def downloadVideo(link, id, keyword):
             time.sleep(0.5)
 
     def sub_thread(downloadLink, id, keyword, link):
+        global csv_content,csv_data
         # Function to save the video
 
         # Create the 'videos' directory if it doesn't exist
@@ -155,16 +163,32 @@ def downloadVideo(link, id, keyword):
 
         video_path = os.path.join(keyword_folder, f"{id}-{keyword}.mp4")
 
-        mp4File = urlopen(downloadLink)
+        # mp4File = urlopen(downloadLink)
         
-        # Download and save the video
-        with open(video_path, "wb") as output:
-            while True:
-                data = mp4File.read(16384)  # You can experiment with different chunk sizes
-                if data:
-                    output.write(data)
-                else:
-                    break
+        # Download and save the video to local
+        # with open(video_path, "wb") as output:
+        #     while True:
+        #         data = mp4File.read(16384)  # You can experiment with different chunk sizes
+        #         if data:
+        #             output.write(data)
+        #         else:
+        #             break
+
+        # Download and save the video to Bunny CDN
+        bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/{keyword}/{id}-{keyword}.mp4'
+        headers = {
+            'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
+            'Content-Type': 'application/octet-stream'
+        }
+        try:
+            with urlopen(downloadLink) as mp4File:
+                with requests.put(bunny_url, headers=headers, data=mp4File.read()) as response:
+                    print(response.text)
+
+        except Exception as e:
+            print(f"Error uploading file: {e}")
+
+
         # Get video data from TikTok (likes, comments, shares, views)
         data = get_data(link)
         if data != None:
@@ -172,31 +196,65 @@ def downloadVideo(link, id, keyword):
         else:
             like, comment, share, view, videoTitle = ["", "", "", "", ""]
         
-        # Save video path and details to CSV
-        with open('output.csv', mode='a', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['Description and Tags', 'Video ID', 'Likes', 'Comments', 'Shares', 'Views',
-                          'Video Path', 'Keyword']
-            writer = csv.writer(csvfile)
-
-            # If the file is empty, write the header
-            if os.path.getsize('output.csv') == 0:
-                writer.writerow(fieldnames)
-
-            writer.writerow([
-                videoTitle,
-                id,
-                like,
-                comment,
-                share,
-                view,
-                video_path,
+        # Save video path and details to CSV to LOCAL
+        # with open(f'output_{keyword}.csv', mode='a', newline='', encoding='utf-8') as csvfile:
+        #     fieldnames = ['Description and Tags', 'Video ID', 'Likes', 'Comments', 'Shares', 'Views',
+        #                   'Video Path', 'Keyword']
+        #     writer = csv.writer(csvfile)
+        #
+        #     # If the file is empty, write the header
+        #     if os.path.getsize(f'output_{keyword}.csv') == 0:
+        #         writer.writerow(fieldnames)
+        #
+        #     writer.writerow([
+        #         videoTitle,
+        #         id,
+        #         like,
+        #         comment,
+        #         share,
+        #         view,
+        #         video_path,
+        #         keyword,
+        #     ])
+        data = [
+                str(videoTitle).replace(",","|"),
+                str(id),
+                str(like),
+                str(comment),
+                str(share),
+                str(view),
+                f"{id}-{keyword}.mp4",
                 keyword,
-            ])
+            ]
+
+        temp = []
+
+        data = ",".join(data)
+        csv_content += '\n'+data
+        print(csv_content)
+
+        temp = []
+        headers = {
+            'AccessKey': "82a52388-ed4f-4279-80ee2f752b7c-8662-4259",
+            'Content-Type': 'text/csv'
+        }
+        bunny_url = f'https://NY.storage.bunnycdn.com/tiktok-scraper/{keyword}/Output_{keyword}.csv'
+
+        try:
+            with requests.put(bunny_url, headers=headers, data=csv_content) as response:
+
+                return response.ok
+        except Exception as e:
+            print(f"Error uploading CSV file: {e}")
+            return False
+
+        #Save Video to BunnyCDN
 
     if downloadLink is not None:
         # Only start the thread if downloadLink is not None
         s = threading.Thread(target=sub_thread, args=(downloadLink, id, keyword, link,))
         s.start()
+
 def find_des(data):
     #shareMeta
     if isinstance(data, dict):
@@ -276,7 +334,7 @@ def get_data(link):
                         stats_info['playCount'], des)
 
 def start_process(keyword,driver):
-
+    global csv_content,csv_data,csv_fieldnames,sub_threads
 
     # Change the tiktok link
     driver.get(f"https://www.tiktok.com/search/video?q={keyword}")
@@ -323,6 +381,7 @@ def start_process(keyword,driver):
             s=threading.Thread(target=downloadVideo,args=(url, index,keyword,))
             threads.append(s)
 
+
         except Exception as e:
 
             continue
@@ -346,8 +405,12 @@ def start_process(keyword,driver):
         else:
             count+=1
         time.sleep(1.6)
+    for j in join_list:
+        j.join()
+
 
 def main(csv_file_path):
+    global csv_content,csv_data,csv_fieldnames
     # Main function to read keywords from a CSV file and initiate the downloading process
     with open(csv_file_path, 'r', newline='', encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -363,6 +426,9 @@ def main(csv_file_path):
 
             # Start Process
             print(f"Downloading Video for keyword {keyword}")
+            # Create CSV content
+            csv_content = '\n'.join(','.join(map(str, row_data)) for row_data in [csv_fieldnames])
+            csv_data = []
             start_process(keyword, driver)
 
 if __name__ == '__main__':
