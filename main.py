@@ -392,6 +392,7 @@ def start_process(keyword,driver):
         time.sleep(0.8)
 
         urlsToDownload.extend(driver.execute_script(script))
+        print(len(urlsToDownload))
 
         if len(urlsToDownload)>=100:
             break
@@ -447,6 +448,10 @@ def main(csv_file_path):
 
         options = uc.ChromeOptions()
         options.user_data_dir = os.getcwd() + "/profile"
+        options.add_argument('--headless')  # Run Chrome in headless mode
+        options.add_argument('--disable-gpu')  # Disable GPU acceleration (useful in headless mode)
+        options.add_argument('--no-sandbox')  # Disable sandboxing for headless mode in Linux
+        options.add_argument('--disable-dev-shm-usage')
         driver = uc.Chrome(options=options)
 
         for row in csv_reader:
