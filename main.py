@@ -11,6 +11,7 @@ import csv
 import os
 import traceback
 import random
+from selenium.webdriver.common.keys import Keys
 
 # Replace 'http://username:password@your_proxy_url' with the actual proxy URL, username, and password
 proxy_url = 'http://avzxawjz-rotate:43eiaf24ra8o@p.webshare.io:80'
@@ -153,15 +154,15 @@ def downloadVideo(link, id, keyword):
         global csv_content,csv_data
         # Function to save the video
 
-        # Create the 'videos' directory if it doesn't exist
-        videos_dir = 'videos'
-        os.makedirs(videos_dir, exist_ok=True)
+        # # Create the 'videos' directory if it doesn't exist
+        # videos_dir = 'videos'
+        # os.makedirs(videos_dir, exist_ok=True)
+        #
+        # # Create a subfolder inside 'videos' based on the keyword
+        # keyword_folder = os.path.join(videos_dir, keyword)
+        # os.makedirs(keyword_folder, exist_ok=True)
 
-        # Create a subfolder inside 'videos' based on the keyword
-        keyword_folder = os.path.join(videos_dir, keyword)
-        os.makedirs(keyword_folder, exist_ok=True)
-
-        video_path = os.path.join(keyword_folder, f"{id}-{keyword}.mp4")
+        # video_path = os.path.join(keyword_folder, f"{id}-{keyword}.mp4")
 
         # mp4File = urlopen(downloadLink)
         
@@ -342,7 +343,8 @@ def start_process(keyword,driver):
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
     time.sleep(15)
-
+    webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+    time.sleep(6)
     scroll_pause_time = 3
     screen_height = driver.execute_script("return window.screen.height;")
     i = 1
