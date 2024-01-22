@@ -349,6 +349,7 @@ def start_process(keyword,driver):
 
     print("STEP 2: Scrolling page")
     urlsToDownload = []
+    driver.save_screenshot("page.png")
     while True:
         driver.execute_script("window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
         i += 1
