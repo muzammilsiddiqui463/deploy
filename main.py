@@ -12,6 +12,7 @@ import os
 import traceback
 import random
 from selenium.webdriver.common.keys import Keys
+import pickle
 
 # Replace 'http://username:password@your_proxy_url' with the actual proxy URL, username, and password
 proxy_url = 'http://avzxawjz-rotate:43eiaf24ra8o@p.webshare.io:80'
@@ -339,16 +340,21 @@ def start_process(keyword,driver):
 
     # Change the tiktok link
     driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
-
+    # Load cookies from the saved file
+    with open('cookies.pkl', 'rb') as cookies_file:
+        cookies = pickle.load(cookies_file)
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+    driver.refresh()
     # IF YOU GET A TIKTOK CAPTCHA, CHANGE THE TIMEOUT HERE
     # to 60 seconds, just enough time for you to complete the captcha yourself.
     time.sleep(15)
-    webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
-    time.sleep(6)
+    # webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+    # time.sleep(6)
 
-    # Change the tiktok link
-    driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
-    time.sleep(3)
+    # # Change the tiktok link
+    # driver.get(f"https://www.tiktok.com/search/video?lang=en&q={keyword}&t=1705902142362")
+    # time.sleep(3)
     scroll_pause_time = 3
     screen_height = driver.execute_script("return window.screen.height;")
     i = 1
