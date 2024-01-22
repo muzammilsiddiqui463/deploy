@@ -425,7 +425,7 @@ def start_process(keyword,driver):
     for t in threads:
         t.start()
         join_list.append(t)
-        if count>20:
+        if count>5:
             count = 0
             print("Now waiting for current threads to finish.....")
             for j in join_list:
