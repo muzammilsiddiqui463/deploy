@@ -28,9 +28,10 @@ csv_fieldnames = ['Description and Tags', 'Video ID', 'Likes', 'Comments', 'Shar
 csv_content = '\n'.join(','.join(map(str, row_data)) for row_data in [csv_fieldnames])
 csv_data = []
 sub_threads = []
+killer_threads = []
 
 def downloadVideo(link, id, keyword):
-    global proxy,csv_data,csv_content,sub_threads
+    global proxy,csv_data,csv_content,sub_threads,killer_threads
     print(f"Downloading video {id} from: {link} for {keyword}")
     
     # Cookies and headers for the HTTP request
@@ -256,6 +257,11 @@ def downloadVideo(link, id, keyword):
         # Only start the thread if downloadLink is not None
         s = threading.Thread(target=sub_thread, args=(downloadLink, id, keyword, link,))
         s.start()
+        # Set a timer to interrupt the thread after a specific time (e.g., 5 seconds)
+        kill_timer = threading.Timer(30, lambda: s._stop())
+        kill_timer.start()
+
+        killer_threads.append(kill_timer)
         sub_threads.append(s)
 
 def find_des(data):
@@ -337,7 +343,7 @@ def get_data(link):
                         stats_info['playCount'], des)
 
 def start_process(keyword,driver):
-    global csv_content,csv_data,csv_fieldnames,sub_threads
+    global csv_content,csv_data,csv_fieldnames,sub_threads,killer_threads
 
     print("Scraping Started")
 
@@ -441,6 +447,11 @@ def start_process(keyword,driver):
             s.join()
         except:
             pass
+    for k in killer_threads:
+        try:
+            k.cancel()
+        except:
+            continue
 
 
 def main(csv_file_path):
