@@ -403,7 +403,7 @@ def start_process(keyword,driver):
         if len(urlsToDownload)>=100:
             break
 
-    urlsToDownload=urlsToDownload[:100]
+    urlsToDownload=urlsToDownload[:10]
     count=0
 
     print(f"Scraped {len(urlsToDownload)} video Links")
