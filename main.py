@@ -463,7 +463,7 @@ def main(csv_file_path):
         print("STEP 1: Open Chrome browser")
 
         options = uc.ChromeOptions()
-        options.user_data_dir = os.getcwd() + "/profile"
+        # options.user_data_dir = os.getcwd() + "/profile"
         # options.add_argument("enable-automation")
         options.add_argument("--headless")
         # options.add_argument("--window-size=1920,1080")
