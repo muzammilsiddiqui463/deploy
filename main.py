@@ -481,7 +481,7 @@ def main(csv_file_path):
         options.add_argument("--disable-gpu")
 
         # options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option("useAutomationExtension", False)
+        # options.add_experimental_option("useAutomationExtension", False)
         options.page_load_strategy = 'eager'
 
         service_ags = ['--verbose', f'--log-path={os.getcwd()}/chromedriver.log']
