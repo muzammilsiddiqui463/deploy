@@ -257,11 +257,14 @@ def downloadVideo(link, id, keyword):
         # Only start the thread if downloadLink is not None
         s = threading.Thread(target=sub_thread, args=(downloadLink, id, keyword, link,))
         s.start()
-        # Set a timer to interrupt the thread after a specific time (e.g., 5 seconds)
-        kill_timer = threading.Timer(30, lambda: s._stop())
-        kill_timer.start()
+        try:
+            # Set a timer to interrupt the thread after a specific time (e.g., 5 seconds)
+            kill_timer = threading.Timer(30, lambda: s._stop())
+            kill_timer.start()
 
-        killer_threads.append(kill_timer)
+            killer_threads.append(kill_timer)
+        except:
+            pass
         sub_threads.append(s)
 
 def find_des(data):
@@ -403,7 +406,7 @@ def start_process(keyword,driver):
         if len(urlsToDownload)>=100:
             break
 
-    urlsToDownload=urlsToDownload[:10]
+    urlsToDownload=urlsToDownload[:100]
     count=0
 
     print(f"Scraped {len(urlsToDownload)} video Links")
