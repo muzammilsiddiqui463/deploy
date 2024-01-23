@@ -464,17 +464,29 @@ def main(csv_file_path):
 
         options = uc.ChromeOptions()
         # options.user_data_dir = os.getcwd() + "/profile"
-        # options.add_argument("enable-automation")
+        options = webdriver.ChromeOptions()
         options.add_argument("--headless")
-        # options.add_argument("--window-size=1920,1080")
-        # options.add_argument("--no-sandbox")
-        options.add_argument("--disable-extensions")
-        # options.add_argument("--dns-prefetch-disable")
         options.add_argument("--disable-gpu")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-features=NetworkService")
+        options.add_argument("--disable-features=VizDisplayCompositor")
+        options.add_argument("--disable-features=IsolateOrigins,site-per-process")
+        options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+        options.add_argument("--enable-features=VizDisplayCompositor")
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
         options.page_load_strategy = 'eager'
+
         service_ags = ['--verbose', f'--log-path={os.getcwd()}/chromedriver.log']
         driver = uc.Chrome(options=options,
-                           driver_executable_path=os.getcwd()+"/chromedriver-linux64/chromedriver",
+                           # driver_executable_path=os.getcwd()+"/chromedriver-linux64/chromedriver",
                            service_args=service_ags)
 
         driver.get(f"https://www.tiktok.com/search/video?lang=en&t=1705902142362")
