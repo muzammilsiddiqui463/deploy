@@ -432,19 +432,25 @@ def start_process(keyword,driver):
     join_list = []
     count = 0
     for t in threads:
-        t.start()
-        join_list.append(t)
-        if count>2:
-            count = 0
-            print("Now waiting for current threads to finish.....")
-            for j in join_list:
-                j.join()
-            join_list = []
-        else:
-            count+=1
-        time.sleep(1.6)
+        try:
+            t.start()
+            join_list.append(t)
+            if count>2:
+                count = 0
+                print("Now waiting for current threads to finish.....")
+                for j in join_list:
+                    j.join()
+                join_list = []
+            else:
+                count+=1
+            time.sleep(1.6)
+        except:
+            pass
     for j in join_list:
-        j.join()
+        try:
+            j.join()
+        except:
+            pass
     for s in sub_threads:
         try:
             s.join()
